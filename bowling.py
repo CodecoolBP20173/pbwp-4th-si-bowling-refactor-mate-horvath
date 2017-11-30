@@ -1,27 +1,24 @@
-def score(roll):
-    roll = [item.upper() for item in roll]
+def score(throws):
+    throws = throws.upper()
     result = 0
     frame = 1
     strike = 'X'
     spare = '/'
     max_frame = 10
     in_first_half = True
-    for i in range(len(roll)):
-        result += get_rollresult(i, spare, i, roll)
+    for i in range(len(throws)):
+        result += get_throwresult(i, spare, i, throws)
         if frame < max_frame:
-            if roll[i] == spare:
-                result += get_value(roll[i+1])
-            if roll[i] == strike:
-                result += get_value(roll[i+1])
-                result += get_rollresult(i+2, spare, i, roll)
-        if in_first_half:
-            in_first_half = False
-        else:
+            if throws[i] == spare:
+                result += get_value(throws[i+1])
+            if throws[i] == strike:
+                result += get_value(throws[i+1])
+                result += get_throwresult(i+2, spare, i, throws)
+                frame += 1
+                continue
+        if not in_first_half:
             frame += 1
-            in_first_half = True
-        if roll[i] == strike:
-            in_first_half = True
-            frame += 1
+        in_first_half = not in_first_half
     return result
 
 
@@ -34,8 +31,8 @@ def get_value(char):
         raise ValueError()
 
 
-def get_rollresult(NumberOfRoll, ValueToCheck, NumberOfCurrentRoll, ResultList):
-    if ResultList[NumberOfRoll] == ValueToCheck:
-            return get_value(ResultList[NumberOfCurrentRoll]) - get_value(ResultList[NumberOfRoll-1])
+def get_throwresult(NumberOfthrows, ValueToCheck, NumberOfCurrentthrows, ResultList):
+    if ResultList[NumberOfthrows] == ValueToCheck:
+            return get_value(ResultList[NumberOfCurrentthrows]) - get_value(ResultList[NumberOfthrows-1])
     else:
-        return get_value(ResultList[NumberOfRoll])
+        return get_value(ResultList[NumberOfthrows])
